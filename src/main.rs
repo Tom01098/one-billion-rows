@@ -53,7 +53,7 @@ fn main() {
     let file = File::open(args.file).unwrap();
     let mmap = unsafe { Mmap::map(&file).unwrap() };
 
-    let mut measurements: HashMap<String, StationMeasurement> = HashMap::new();
+    let mut measurements: HashMap<&str, StationMeasurement> = HashMap::new();
 
     for line in mmap.split(|&b| b == b'\n') {
         if line.is_empty() {
@@ -64,7 +64,7 @@ fn main() {
         let (station, measurement) = line.split_once(";").unwrap();
 
         measurements
-            .entry(station.to_string())
+            .entry(station)
             .or_default()
             .add_measurement(measurement.parse().unwrap());
     }
