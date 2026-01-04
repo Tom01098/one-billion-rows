@@ -1,8 +1,8 @@
+use clap::Parser;
 use std::collections::HashMap;
 use std::fmt::{Display, Formatter};
 use std::fs::File;
-use std::io::{BufRead, BufReader};
-use clap::Parser;
+use memmap2::Mmap;
 
 #[derive(Parser)]
 struct Args {
@@ -51,12 +51,16 @@ fn main() {
     let args = Args::parse();
 
     let file = File::open(args.file).unwrap();
-    let reader = BufReader::new(file);
+    let mmap = unsafe { Mmap::map(&file).unwrap() };
 
     let mut measurements: HashMap<String, StationMeasurement> = HashMap::new();
 
-    for line in reader.lines() {
-        let line = line.unwrap();
+    for line in mmap.split(|&b| b == b'\n') {
+        if line.is_empty() {
+            continue;
+        }
+
+        let line = std::str::from_utf8(line).unwrap();
         let (station, measurement) = line.split_once(";").unwrap();
 
         measurements
