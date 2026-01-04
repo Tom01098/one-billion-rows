@@ -60,7 +60,7 @@ fn main() {
             continue;
         }
 
-        let line = std::str::from_utf8(line).unwrap();
+        let line = unsafe { std::str::from_utf8_unchecked(line) };
         let (station, measurement) = line.split_once(";").unwrap();
 
         measurements
