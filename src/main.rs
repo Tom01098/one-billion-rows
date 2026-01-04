@@ -2,6 +2,12 @@ use std::collections::HashMap;
 use std::fmt::{Display, Formatter};
 use std::fs::File;
 use std::io::{BufRead, BufReader};
+use clap::Parser;
+
+#[derive(Parser)]
+struct Args {
+    file: String,
+}
 
 #[derive(Debug)]
 struct StationMeasurement {
@@ -42,7 +48,9 @@ impl Default for StationMeasurement {
 }
 
 fn main() {
-    let file = File::open("measurements.txt").unwrap();
+    let args = Args::parse();
+
+    let file = File::open(args.file).unwrap();
     let reader = BufReader::new(file);
 
     let mut measurements: HashMap<String, StationMeasurement> = HashMap::new();
