@@ -6,6 +6,7 @@ edition = "2024"
 [dependencies]
 clap = { version = "4.5.54", features = ["derive"] }
 memmap2 = "0.9.9"
+rapidhash = "4.2.0"
 
 [profile.release]
 opt-level = 3

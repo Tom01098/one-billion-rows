@@ -1,8 +1,8 @@
 use clap::Parser;
-use std::collections::HashMap;
+use memmap2::Mmap;
+use rapidhash::{HashMapExt, RapidHashMap};
 use std::fmt::{Display, Formatter};
 use std::fs::File;
-use memmap2::Mmap;
 
 #[derive(Parser)]
 struct Args {
@@ -53,7 +53,7 @@ fn main() {
     let file = File::open(args.file).unwrap();
     let mmap = unsafe { Mmap::map(&file).unwrap() };
 
-    let mut measurements: HashMap<&str, StationMeasurement> = HashMap::new();
+    let mut measurements: RapidHashMap<&str, StationMeasurement> = RapidHashMap::with_capacity(10_000);
 
     for line in mmap.split(|&b| b == b'\n') {
         if line.is_empty() {
