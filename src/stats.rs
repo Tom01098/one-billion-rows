@@ -34,3 +34,15 @@ pub fn compute_statistics(input: &[u8]) -> Vec<String> {
 
     results
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_compute_statistics_simple() {
+        let input = b"abc;12.0\ndef;-1.5\nabc;66.5\n";
+        let results = compute_statistics(input);
+        assert_eq!(results, vec!["abc=12.0/39.3/66.5", "def=-1.5/-1.5/-1.5"]);
+    }
+}

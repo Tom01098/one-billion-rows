@@ -21,9 +21,19 @@ impl StationMeasurements {
     }
 }
 
+fn round_float_up_1dp(f: f32) -> f32 {
+    (f * 10.0).ceil() / 10.0
+}
+
 impl Display for StationMeasurements {
     fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
-        write!(f, "{}/{}/{}", self.min, self.mean(), self.max)
+        write!(
+            f,
+            "{:.1}/{:.1}/{:.1}",
+            round_float_up_1dp(self.min),
+            round_float_up_1dp(self.mean()),
+            round_float_up_1dp(self.max)
+        )
     }
 }
 
@@ -35,5 +45,19 @@ impl Default for StationMeasurements {
             min: f32::NAN,
             max: f32::NAN,
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_round() {
+        assert_eq!(round_float_up_1dp(1.234), 1.3);
+        assert_eq!(round_float_up_1dp(1.55), 1.6);
+        assert_eq!(round_float_up_1dp(2.000001), 2.1);
+        assert_eq!(round_float_up_1dp(-1.55), -1.5);
+        assert_eq!(round_float_up_1dp(-0.05), 0.0);
     }
 }

@@ -1,5 +1,5 @@
 mod measurements;
-mod stats;
+pub mod stats;
 
 use crate::stats::compute_statistics;
 use clap::Parser;
